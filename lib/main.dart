@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:interview_project_202105/data/user_api_provider.dart';
 import 'package:interview_project_202105/ui/main_user_row.dart';
 
 void main() {
@@ -31,17 +32,26 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(8),
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) {
-          return userRow;
-        },
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
-      ),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: FutureBuilder<List<Map>>(
+            future: UserApiProvider().fetchUsers(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) print(snapshot.error);
+
+              if (snapshot.hasData)
+                return ListView.separated(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return userRow(snapshot.data[index]);
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                );
+              else
+                return Center(child: CircularProgressIndicator());
+            }));
   }
 }
