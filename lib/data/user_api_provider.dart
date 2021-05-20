@@ -1,13 +1,25 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:interview_project_202105/data/user_database.dart';
 import 'package:interview_project_202105/models/user.dart';
 
 class UserApiProvider {
-  List<Map> parseUsers(String responseBody) {
+  List<User> users;
+
+  Future<List<Map>> parseUsers(String responseBody) async {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-    List<User> users = parsed.map<User>((json) => User.fromJson(json)).toList();
-    return List.generate(users.length, (index) => users[index].toMap);
+    users = parsed.map<User>((json) => User.fromJson(json)).toList();
+
+    // Save data locally:
+    DatabaseHelper helper = DatabaseHelper.instance;
+
+    for (var user in users) {
+      await helper.insertUser(user);
+    }
+
+    // Return local data:
+    return helper.users();
   }
 
   Future<List<Map>> fetchUsers() async {
@@ -17,7 +29,9 @@ class UserApiProvider {
     if (response.statusCode == 200) {
       return parseUsers(response.body);
     } else {
-      throw Exception('Failed to load user');
+      // Reuse previously retrieved data:
+      DatabaseHelper helper = DatabaseHelper.instance;
+      return helper.users();
     }
   }
 }
