@@ -3,15 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
-AlertDialog userCard(BuildContext context, Map userData) {
+AlertDialog userCard(BuildContext context, Map userData, Color circleColor) {
   return AlertDialog(
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         CircleAvatar(
-            child: Text(userData['initials']),
-            backgroundColor:
-                Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+            child: Text(userData['initials'], style: TextStyle(color: Colors.black)),
+            backgroundColor: circleColor),
         SizedBox(height: 8),
         Text(
           userData['name'],

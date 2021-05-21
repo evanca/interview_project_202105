@@ -13,9 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.brown,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -29,7 +30,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   Stream<List<Map>> _stream() async* {
     // The initial data:
     yield await UserApiProvider().fetchUsers();
@@ -54,15 +54,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.all(8),
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return userRow(context, snapshot.data[index]);
+                    // Generate a color based on list index:
+                    Color circleColor =
+                        Color((index + 1) * 0xFFE1BE7).withOpacity(.5);
+                    return userRow(context, snapshot.data[index], circleColor);
                   },
                   separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
                 );
               else if (snapshot.data == []) {
-                return Text("No users fetched. Please check your internet connection.");
-              }
-              else
+                return Text(
+                    "No users fetched. Please check your internet connection.");
+              } else
                 return Center(child: CircularProgressIndicator());
             }));
   }
