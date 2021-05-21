@@ -49,14 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
         body: StreamBuilder(
             stream: _stream(),
             builder: (context, snapshot) {
-              if (snapshot.hasError) print(snapshot.error);
-
               if (snapshot.hasData)
                 return ListView.separated(
                   padding: const EdgeInsets.all(8),
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return userRow(snapshot.data[index]);
+                    return userRow(context, snapshot.data[index]);
                   },
                   separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
