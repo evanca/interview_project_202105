@@ -1,16 +1,7 @@
 # interview_project_202105
 
-A new Flutter application.
+Android:</br>
+<img src="readme/Screenshot_1621588656.png" width="200"><img src="readme/Screenshot_1621588671.png" width="200">
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+iOS:</br>
+<img src="readme/Simulator Screen Shot - _iPhone 8 Plus - 2021-05-21 at 12.20.39.png" width="200"><img src="readme/Simulator Screen Shot - _iPhone 8 Plus - 2021-05-21 at 12.21.06.png" width="200">
