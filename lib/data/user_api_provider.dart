@@ -5,21 +5,20 @@ import 'package:interview_project_202105/data/user_database.dart';
 import 'package:interview_project_202105/models/user.dart';
 
 class UserApiProvider {
+  DatabaseHelper helper = DatabaseHelper.instance;
   List<User> users;
 
   Future<List<Map>> parseUsers(String responseBody) async {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
     users = parsed.map<User>((json) => User.fromJson(json)).toList();
 
-    // Save data locally:
-    DatabaseHelper helper = DatabaseHelper.instance;
-
+    // Delete all users and save new data locally:
+    await helper.deleteAllUsers();
     for (var user in users) {
       await helper.insertUser(user);
     }
 
-    // Return local data:
-    return helper.users();
+    return List.generate(users.length, (index) => users[index].toMap);
   }
 
   Future<List<Map>> fetchUsers() async {
@@ -29,8 +28,7 @@ class UserApiProvider {
     if (response.statusCode == 200) {
       return parseUsers(response.body);
     } else {
-      // Reuse previously retrieved data:
-      DatabaseHelper helper = DatabaseHelper.instance;
+      // Use previously retrieved data:
       return helper.users();
     }
   }

@@ -29,14 +29,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  Stream<List<Map>> _stream() async* {
+    // The initial data:
+    yield await UserApiProvider().fetchUsers();
+    // Check back every 10 minutes:
+    yield* Stream.periodic(Duration(minutes: 10), (_) {
+      print("Checking for data updates: ${DateTime.now()}");
+      return UserApiProvider().fetchUsers();
+    }).asyncMap((event) async => await event);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: FutureBuilder<List<Map>>(
-            future: UserApiProvider().fetchUsers(),
+        body: StreamBuilder(
+            stream: _stream(),
             builder: (context, snapshot) {
               if (snapshot.hasError) print(snapshot.error);
 
@@ -50,6 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
                 );
+              else if (snapshot.data == []) {
+                return Text("No users fetched. Please check your internet connection.");
+              }
               else
                 return Center(child: CircularProgressIndicator());
             }));

@@ -48,4 +48,9 @@ class DatabaseHelper {
     final db = await database;
     return await db.query('users');
   }
+
+  Future<void> deleteAllUsers() async {
+    final db = await database;
+    await db.delete('users');
+  }
 }
